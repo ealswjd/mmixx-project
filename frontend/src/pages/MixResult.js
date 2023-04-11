@@ -18,7 +18,7 @@ const MixResult = () => {
   const presetName = location.state && location.state.presetName;
   
   useEffect(() => {
-    console.log('Mix Result : ', musicSeq, presetSeq)
+    // console.log('Mix Result : ', musicSeq, presetSeq)
     musicMix({music_seq: musicSeq, preset_seq: presetSeq}).then(
       response => setResult(response.data)
     ).catch( error => console.log(error))
