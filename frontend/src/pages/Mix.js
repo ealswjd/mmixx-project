@@ -33,12 +33,6 @@ const Mix = () => {
   }
 
   useEffect(() => {
-    // console.log('******* 믹스할 음악 *******')
-    // console.log(musicSelected)
-    // console.log(musicName)
-    // console.log(musicSeq)
-    // console.log(musicianName)
-    // console.log('****************************')
     getPreset()
     .then((res) => {
       setPresetData(res.data)
