@@ -18,10 +18,10 @@ const SelectMusicItem = (props, {selectedMusicSeq}) => {
   const [isSelected, setIsSelected] = useState(true)
 
   useEffect(() => {
-    console.log(props.selNum)
+    // console.log(props.selNum)
     if (props.selNum === musicSeq) {
       setIsSelected(true)
-      console.log('선택된 음악', props.selNum)
+      // console.log('선택된 음악', props.selNum)
     } else {
       setIsSelected(false)
       // console.log('선택되지 않은 프리셋', props.selNum)
