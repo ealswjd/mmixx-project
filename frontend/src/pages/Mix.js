@@ -108,8 +108,8 @@ const Mix = () => {
             musicLength='442862'
             musicianName="B.J.Thomas"
             albumName="Unknown"
-            presetUrl="https://s3.ap-northeast-2.amazonaws.com/bucket-mp3-file-for-mmixx/music/4efeaba5-e758-4015-8bc1-1e4ed502f9b1.wav"
-            coverImage="https://s3.ap-northeast-2.amazonaws.com/bucket-mp3-file-for-mmixx/images/8b5fb8a8-ec09-40d5-8aff-a5b6ad30791e.jpg"
+            presetUrl="https://bucket-mp3-file-for-mmixx.s3.ap-northeast-2.amazonaws.com/music/c6d7bfbc-299a-47f4-b458-90ede40fe322.wav"
+            coverImage="https://bucket-mp3-file-for-mmixx.s3.ap-northeast-2.amazonaws.com/images/raindrops.jpg"
             selNum = {presetSeq}
           ></PresetCard>
         </div>
@@ -122,8 +122,8 @@ const Mix = () => {
             musicianName="나연"
             musicLength="404836"
             albumName="Unknown"
-            presetUrl="https://s3.ap-northeast-2.amazonaws.com/bucket-mp3-file-for-mmixx/music/c0a34dff-ec72-4be3-804a-d9bc037da373.wav"
-            coverImage="https://s3.ap-northeast-2.amazonaws.com/bucket-mp3-file-for-mmixx/images/c6d2f1de-bad7-4517-b52c-84536c1060b9.jpg"
+            presetUrl="https://bucket-mp3-file-for-mmixx.s3.ap-northeast-2.amazonaws.com/music/pop.wav"
+            coverImage="https://bucket-mp3-file-for-mmixx.s3.ap-northeast-2.amazonaws.com/images/poppop.jpg"
             selNum = {presetSeq}
           ></PresetCard>
         </div>
@@ -136,8 +136,8 @@ const Mix = () => {
             musicLength="287629"
             musicianName="DJ Unknown"
             albumName="Unknown"
-            presetUrl="https://s3.ap-northeast-2.amazonaws.com/bucket-mp3-file-for-mmixx/music/203c4359-944b-4820-b3a5-33d708ea1e7e.mp3"
-            coverImage="https://s3.ap-northeast-2.amazonaws.com/bucket-mp3-file-for-mmixx/images/3724be88-ec26-4944-b215-87312c7af6f7.jpg"
+            presetUrl="https://bucket-mp3-file-for-mmixx.s3.ap-northeast-2.amazonaws.com/music/bass_2.mp3"
+            coverImage="https://bucket-mp3-file-for-mmixx.s3.ap-northeast-2.amazonaws.com/images/bass+img.png"
             selNum = {presetSeq}
           ></PresetCard>
         </div>
@@ -150,8 +150,8 @@ const Mix = () => {
             musicLength="223179"
             musicianName="방탄소년단"
             albumName="LOVE YOURSELF 承 `Her`"
-            presetUrl="https://s3.ap-northeast-2.amazonaws.com/bucket-mp3-file-for-mmixx/music/239b93b6-5d68-4d2f-92e1-e1e4390e6dc9.mp3"
-            coverImage="https://s3.ap-northeast-2.amazonaws.com/bucket-mp3-file-for-mmixx/images/ffa46eba-2ec1-437d-ae49-674e19e2ef2e.jpg"
+            presetUrl="https://bucket-mp3-file-for-mmixx.s3.ap-northeast-2.amazonaws.com/music/%EB%B0%A9%ED%83%84%EC%86%8C%EB%85%84%EB%8B%A8-02-DNA.mp3"
+            coverImage="https://bucket-mp3-file-for-mmixx.s3.ap-northeast-2.amazonaws.com/images/65c4bac4-ecc3-4c9a-baa3-4361d7f245f1.jpg"
             selNum = {presetSeq}
           ></PresetCard>
         </div>
@@ -164,8 +164,8 @@ const Mix = () => {
             musicLength="143550"
             musicianName="Brian Tyler"
             albumName="아이언맨 3 OST"
-            presetUrl="https://s3.ap-northeast-2.amazonaws.com/bucket-mp3-file-for-mmixx/music/7926ce00-3f1c-445b-a70f-d20485fdfd98.mp3"
-            coverImage="https://s3.ap-northeast-2.amazonaws.com/bucket-mp3-file-for-mmixx/images/7c64870d-4f8a-4b8b-a29a-862b59ee60bd.jpg"
+            presetUrl="https://bucket-mp3-file-for-mmixx.s3.ap-northeast-2.amazonaws.com/music/Brian_Tyler-01-Iron_Man_3.mp3"
+            coverImage="https://bucket-mp3-file-for-mmixx.s3.ap-northeast-2.amazonaws.com/images/man.PNG"
             selNum = {presetSeq}
           ></PresetCard>
         </div>
