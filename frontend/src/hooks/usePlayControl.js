@@ -68,15 +68,23 @@ export const usePlayControl = (playlistSeq) => {
   /**
    * 다음 노래 재생하기 
    */
-  const playNext = async ( onShuffle = false ) => {
-    const nextIndex = await queue.playlist.findIndex((item) => item.playing) + 1
-    createNowMusic(queue.playlist[nextIndex])
-    createNowPlaylist(queue.playlist, nextIndex)
-    if (!audioElement.paused) {
-      audioElement.pause()
+  const playNext = ( onShuffle = false ) => {
+    if (queue && queue.playlist.length > 0) {
+
+      const currentIndex = queue.findIndex((item) => item.playing)
+      const queueLength = queue.length
+      let nextIndex = -1
+      if (onShuffle) {
+        nextIndex = Math.floor(Math.random() * queueLength)
+  
+      } else {
+        nextIndex = currentIndex + 1
+      }
+      queue[currentIndex].playing = false
+      queue[nextIndex].playing = true
+  
+      setNow(queue.find((item) => item.playing))
     }
-    audioElement.play()
-    console.log(nextIndex)
   }
 
   const handlePlay = () => {
