@@ -1,26 +1,33 @@
-// import base from "./base";
-import axios from "axios";
+import instance from "./base";
 
-const base = axios.create({
-  baseURL: "http://localhost:5555",
-});
+// import axios from "axios";
+// const instance = axios.create({
+//   // baseURL: process.env.REACT_APP_BASE_URL,
+//   // baseURL: "https://j8a403.p.ssafy.io/api",
+//   baseURL: "http://localhost:5555/api", // 로컬 테스트
+//   // headers: {
+//   //   Authorization: `Bearer ${localStorage.getItem("auth")}`,
+//   // },
+// });
+// instance.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("auth")}`;
 
-export const getMusicList = async (page = 1) => {
-  const { data } = await base.get(`/api/music?page=${page}`);
-  return data;
-};
+const musicUrl = `/music`;
 
-export const getMusicListByCondition = async (
-  filter = "x",
-  order = "x",
-  query = "",
-  page = 1
-) => {
-  const { data } = await base.get(
-    `/api/music/search?filter=${filter}&order=${order}&query=${query}&page=${page}`
-  );
-  return data;
-};
+export const getMusicList = async ({ userSeq, page = 1 }) => await instance.get(`${musicUrl}/${userSeq}?page=${page}`);
 
-export const registMusic = async (data, config) =>
-  await base.post(`/api/music`, data, config);
+export const getMusicListByCondition = async ({ userSeq, filter = "", order = "", query = "", page = 1 }) =>
+  await instance.get(`${musicUrl}/search/${userSeq}?filter=${filter}&order=${order}&query=${query}&page=${page}`);
+
+export const uploadMusic = async (data) =>
+  await instance.post(`${musicUrl}`, data, {
+    headers: { "content-type": "multipart/form-data" },
+  });
+
+export const downloadMusic = async (musicSeq) =>
+  await instance.get(`${musicUrl}/download/${musicSeq}`, {
+    responseType: "blob",
+  });
+
+export const countMusic = async (userSeq) => await instance.get(`${musicUrl}/count/${userSeq}`);
+
+export const splitMusic = async (musicSeq) => await instance.get(`${musicUrl}/inst/${musicSeq}`);

@@ -22,10 +22,14 @@ s3 = boto3.client('s3',
 bucket_name = 'bucket-mp3-file-for-mmixx'
 # Create your views here.
 class MusicAPIView(APIView):
-    def get(self, request):
+    def post(self, request):
+        print("***** Django Music Mix Start *****")
         # # s3 path를 query_params로 주는지 확인해야 함.
+        print("request.data : ", request.data)
         music_path = request.data['music_path']
         preset_path = request.data['preset_path']
+        print("music_path : ", music_path)
+        print("preset_path : ", preset_path)
         # music_path = request.GET.get('music_path')
         # preset_path = request.GET.get('preset_path')
         # music_path = 'music/ba466b9d-3c76-4469-bbe7-6ceb6ef818d9.mp3'
@@ -37,7 +41,7 @@ class MusicAPIView(APIView):
         try:
             subprocess.run(args, check=True)
         except subprocess.CalledProcessError:
-            return Response({'status' : 'failure'})
+            return Response({'FAIL'})
 
         # results에는 s3에 업로드한 결과 파일의 path를 JSON 형식으로 저장
         results = {
@@ -51,8 +55,11 @@ class MusicAPIView(APIView):
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class InstAPIView(APIView):
-    def get(self, request):
+    def post(self, request):
+        print("***** Django Music Split Start *****")
+        print("request.data : ", request.data)
         music_path = request.data['music_path']
+        print("music_path : ", music_path)
         # music_path = request.GET.get('image_path')
         # music_path = 'music/ba466b9d-3c76-4469-bbe7-6ceb6ef818d9.mp3'
         if music_path[-3:] == "mp3":
@@ -67,10 +74,12 @@ class InstAPIView(APIView):
         except subprocess.CalledProcessError:
             return Response({'status' : 'failure'})
         inst_path = 'music/' + f'{music_path[6:-4]}'+'_inst.wav'
-        s3.put_object(Bucket=bucket_name, Key=inst_path, Body="output/target_inst/accompaniment.wav")
+        data = open("output/target_inst/accompaniment.wav", 'rb')
+        s3.put_object(Bucket=bucket_name, Key=inst_path, Body=data, ContentType = 'wav')
         results = {
             'music' : 'music/' + f'{music_path[6:-4]}'+'_inst.wav',
         }
+        print('results : ', results)
         serializers = MusicSerializer(data = results)
         if serializers.is_valid():
             return Response(serializers.data, status=status.HTTP_201_CREATED)

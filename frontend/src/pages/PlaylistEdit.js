@@ -1,19 +1,76 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import styled, { css } from "styled-components"
 import AlbumIcon from '@mui/icons-material/Album'
 
 import { Wrapper, Header, DefaultBtn } from "components/Common"
 import { Switch } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import { getPlaylistInfo, modifyPlaylist } from 'api/playlist'
+import { useRecoilValue } from "recoil";
+import { userInfo } from "atom/atom";
+import CustomToast from "components/mymusic/CustomToast";
 
-const PlaylistCreate = ({ playlist }) => {
+const PlaylistEdit = () => {
+  const { playlistSeq } = useParams();
+  // console.log(playlistSeq);
   const inputRef = useRef(null)
   const navigate = useNavigate()
+  const [ playlistInfo, setPlaylistInfo ] = useState({
+    playlistName: '',
+    isPrivate: true,
+    userSeq: -1
+  })
+  const [isChecked, setIsChecked] = useState(false);
 
-  useEffect(() => {
+  const handleChange = () => {
+    setIsChecked(!isChecked);
+  };
+
+  // user
+  const atomUser = useRecoilValue(userInfo);
+
+  const [toastCheck, setToastCheck] = useState(false);
+
+  // 플레이리스트 정보 불러오기
+  useEffect(() => {    
+    getPlaylistInfo(playlistSeq, atomUser.userSeq)
+    .then(res => {
+      setPlaylistInfo(res.data)
+      setIsChecked(res.data.isPrivate)
+    })
+    .catch(err => console.log(err))
+    
     inputRef.current.select()
     inputRef.current.focus()
-  })
+  }, [])
+
+  // 수정 완료
+  const modifySubmit =  () => {
+    // console.log(isChecked);
+    // console.log(inputRef.current.value);
+    var title = inputRef.current.value;
+    if (title.replace(/\s/g, "") === "") {
+      // alert("제목을 입력해주세요!!")
+      setToastCheck(true)
+    } else {
+      modifyPlaylist(
+        playlistSeq,
+        {
+          playlist_name: title,
+          is_private: isChecked,
+        }
+      ).then(_ => {
+        // console.log('?????', res)
+        navigate(`/playlist/${playlistSeq}`, {
+          state: {
+            success: true,
+            msg: "플레이리스트 수정 성공",
+            width: "250px",
+        }})
+      }
+      )
+    }//else
+  }//modifySubmit
 
   return (
     <StyleWrapper url="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bXVzaWN8ZW58MHx8MHx8&w=1000&q=80">
@@ -21,6 +78,7 @@ const PlaylistCreate = ({ playlist }) => {
         title="Edit Playlist"
         desc="플레이리스트 수정"
       />
+      {toastCheck ? <CustomToast res='error' text='제목을 입력해주세요!' toggle={setToastCheck} width='230px' /> : null}
       <InputContent>
         <DefaultCover>
           <AlbumIcon color="white" fontSize="large"/>
@@ -28,17 +86,20 @@ const PlaylistCreate = ({ playlist }) => {
         <RightContent>
           <Top>
             <InputTitle>
-              <input type="text" ref={inputRef} defaultValue="#플레이리스트 제목"></input>
+              <input type="text" ref={inputRef} defaultValue={playlistInfo.playlistName }></input>
             </InputTitle>
             <InputRivateToggle>
-              공개여부
-              <Switch defaultChecked/>
+              비공개여부
+              <Switch checked={isChecked } onChange={handleChange} />
             </InputRivateToggle>
           </Top>
           <Bottom>
-            <AddMusicBtn onClick={() => navigate("/playlist/select")}>
-              곡 추가
-            </AddMusicBtn>
+            <CancleBtn onClick={() => navigate(`/playlist/${playlistSeq}`)}>
+              취소
+            </CancleBtn>
+            <ModifyBtn onClick={modifySubmit}>
+              수정 완료
+            </ModifyBtn>
           </Bottom>
         </RightContent>
       </InputContent>
@@ -117,7 +178,12 @@ const InputRivateToggle = styled.div`
   display: inline-block;
 `
 
-const AddMusicBtn = styled(DefaultBtn)`
+// const AddMusicBtn = styled(DefaultBtn)`
+// `
+const ModifyBtn = styled(DefaultBtn)`
 `
 
-export default PlaylistCreate;
+const CancleBtn = styled(DefaultBtn)`
+`
+
+export default PlaylistEdit;

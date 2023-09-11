@@ -11,7 +11,6 @@ const CustomSelect = ({ options, selectKind, setSelect }) => {
     function onClickOutside(event) {
       if (!show) return;
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-        // console.log("Clicked outside the wrapper");
         setShow(false);
       }
     }
@@ -33,7 +32,7 @@ const CustomSelect = ({ options, selectKind, setSelect }) => {
   };
 
   return (
-    <Div ref={wrapperRef}>
+    <Section ref={wrapperRef}>
       <LightOutlineBtn onClick={onClick} active={show}>
         {selected}
       </LightOutlineBtn>
@@ -48,11 +47,13 @@ const CustomSelect = ({ options, selectKind, setSelect }) => {
           )
         )}
       </Ul>
-    </Div>
+    </Section>
   );
 };
-const Div = styled.div`
+const Section = styled.section`
   display: block;
+  margin-left: 20px;
+  // padding: 0;
   // position: relative;
 `;
 

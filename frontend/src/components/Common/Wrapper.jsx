@@ -7,8 +7,14 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: start;
+  margin-left: 200px;
+  
+  @media (max-width: 768px) {
+    margin-left: 0;
+  }
 
-  padding-left: 200px;
-
+  >:last-child {
+    margin-bottom: 150px;
+  }
 `
 export default Wrapper;

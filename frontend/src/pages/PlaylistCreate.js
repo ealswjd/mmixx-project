@@ -1,10 +1,11 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import styled, { css } from "styled-components"
 import AlbumIcon from '@mui/icons-material/Album'
+import { Switch } from '@mui/material'
 
 import { Wrapper, Header, DefaultBtn } from "components/Common"
-import { Switch } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import CustomToast from "components/mymusic/CustomToast";
 
 const PlaylistCreate = () => {
   const inputRef = useRef(null)
@@ -13,7 +14,29 @@ const PlaylistCreate = () => {
   useEffect(() => {
     inputRef.current.select()
     inputRef.current.focus()
+    console.log(inputRef.current.value)
   })
+
+  const [toastCheck, setToastCheck] = useState(false);
+  const addBtnClick = (e) => { 
+    var title = inputRef.current.value;
+    if (title.replace(/\s/g, "") === "") {
+      // alert("제목을 입력해주세요!!")
+      setToastCheck(true)
+    } else {
+      navigate("/playlist/select/create", {
+        state : {
+          playlistTitle: title,
+          isPrivate: isChecked,
+        } 
+        })      
+    }//else
+  }//addBtnClick
+
+  const [isChecked, setIsChecked] = useState(false);
+  const handleChange = () => {
+    setIsChecked(!isChecked);
+  };
 
   return (
     <StyleWrapper url="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bXVzaWN8ZW58MHx8MHx8&w=1000&q=80">
@@ -21,6 +44,7 @@ const PlaylistCreate = () => {
         title="New Playlist"
         desc="새 플레이리스트 만들기"
       />
+      {toastCheck ? <CustomToast res='error' text='제목을 입력해주세요!' toggle={setToastCheck} width='230px' /> : null}
       <InputContent>
         <DefaultCover>
           <AlbumIcon color="white" fontSize="large"/>
@@ -30,13 +54,13 @@ const PlaylistCreate = () => {
             <InputTitle>
               <input type="text" ref={inputRef} defaultValue="#플레이리스트 제목"></input>
             </InputTitle>
-            <InputRivateToggle>
-              공개여부
-              <Switch defaultChecked/>
-            </InputRivateToggle>
+            <InputPrivateToggle>
+              비공개여부
+              <Switch checked={isChecked } onChange={handleChange}/>
+            </InputPrivateToggle>
           </Top>
           <Bottom>
-            <AddMusicBtn onClick={() => navigate("/playlist/select")}>
+            <AddMusicBtn onClick={addBtnClick}>
               곡 추가
             </AddMusicBtn>
           </Bottom>
@@ -48,7 +72,7 @@ const PlaylistCreate = () => {
 
 const StyleWrapper = styled(Wrapper)`
   ${({theme, url}) => css`
-    background-image: linear-gradient(to bottom left, rgba(0, 0, 0, 0.8), ${theme.palette.darkAlt} 70%), url(${url});
+    background-image: linear-gradient(to bottom left, rgba(0, 0, 0, 0.5), ${theme.palette.darkAlt} 70%), url(${url});
     background-size: cover;
   `}
 `
@@ -112,7 +136,7 @@ const InputTitle = styled.div`
   }
 `
 
-const InputRivateToggle = styled.div`
+const InputPrivateToggle = styled.div`
   font-weight: light;
   display: inline-block;
 `

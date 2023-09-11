@@ -6,6 +6,8 @@ import argparse
 import torchaudio
 import numpy as np
 from pydub import AudioSegment
+import scipy.io as sio
+import scipy.io.wavfile
 # import wave
 
 import sys
@@ -106,17 +108,42 @@ if __name__ == "__main__":
     preset_path = args.reference
 
     # s3에서 파일 다운로드 -> file폴더에 저장
-    s3.download_file(bucket_name, music_path, 'file/target.mp3')
-    s3.download_file(bucket_name, preset_path, 'file/preset.mp3')
+    print("music_path[-3:]", music_path[-3:])
+    print("preset_path[-3:]", preset_path[-3:])
+    if music_path[-3:] == "mp3" : 
+        s3.download_file(bucket_name, music_path, 'file/target.mp3')
+        # mp3 to wav
+        target_sound = AudioSegment.from_mp3('file/target.mp3')
+        target_sound.export('file/target.wav', format = 'wav')
+    elif music_path[-3:] == "wav" :
+        s3.download_file(bucket_name, music_path, 'file/target.wav')
+
+    if preset_path[-3:] == "mp3" : 
+        s3.download_file(bucket_name, preset_path, 'file/preset.mp3')
+        # mp3 to wav
+        preset_sound = AudioSegment.from_mp3('file/preset.mp3')
+        preset_sound.export('file/preset.wav', format = 'wav')
+    elif preset_path[-3:] == "wav" :
+        s3.download_file(bucket_name, preset_path, 'file/preset.wav')
 
     print("current path : ", os.path.abspath(os.path.curdir))
     # mp3 to wav
-    target_sound = AudioSegment.from_mp3('file/target.mp3')
-    # target_sound = target_sound.set_frame_rate(44100)
-    target_sound.export('file/target.wav', format = 'wav')
-
-    preset_sound = AudioSegment.from_mp3('file/preset.mp3')
-    preset_sound.export('file/preset.wav', format = 'wav')
+    
+    # 음악 길이 구하기
+    target_samplerate, target_data = sio.wavfile.read('file/target.wav')
+    target_times = np.arange(len(target_data))/float(target_samplerate)
+    preset_samplerate, preset_data = sio.wavfile.read('file/preset.wav')
+    preset_times = np.arange(len(preset_data))/float(preset_samplerate)
+    print(target_times)
+    print(preset_times)
+    print(target_times[-1])
+    print(preset_times[-1])
+    print(type(target_times[-1]))
+    print(type(preset_times[-1]))
+    print(type(target_times[-1].astype(int)))
+    print(type(preset_times[-1].astype(int)))
+    print(target_times[-1].astype(int))
+    print(preset_times[-1].astype(int))
 
     x, x_sr = torchaudio.load('file/target.wav')
     r, r_sr = torchaudio.load('file/preset.wav')
@@ -137,13 +164,13 @@ if __name__ == "__main__":
         r_24000 = r
 
     # peak normalize to -12 dBFS
-    x_24000 = x_24000[0:1, : 24000 * 300]
+    x_24000 = x_24000[0:1, : 24000 * target_times[-1].astype(int)]
     x_24000 /= x_24000.abs().max()
     x_24000 *= 10 ** (-12 / 20.0)
     x_24000 = x_24000.view(1, 1, -1)
 
     # peak normalize to -12 dBFS
-    r_24000 = r_24000[0:1, : 24000 * 300]
+    r_24000 = r_24000[0:1, : 24000 * preset_times[-1].astype(int)]
     r_24000 /= r_24000.abs().max()
     r_24000 *= 10 ** (-12 / 20.0)
     r_24000 = r_24000.view(1, 1, -1)
@@ -200,7 +227,7 @@ if __name__ == "__main__":
     filename = os.path.basename(args.input).replace(".mp3", "")
     reference = os.path.basename(args.reference).replace(".mp3", "")
     out_filepath = os.path.join(dirname, f"{filename}_mix.wav")
-    s3_filepath = os.path.join(os.path.dirname(args.input), f"{filename}_mix.wav")
+    s3_filepath = os.path.join('music/', f"{filename}_mix.wav")
     in_filepath = os.path.join(dirname, f"{filename}_in.wav")
     print(f"Saved output to {out_filepath}")
 
@@ -208,8 +235,9 @@ if __name__ == "__main__":
     torchaudio.save(buffer, y_hat.cpu().view(1, -1), 24000, format="wav")
     # path_name = f'{filename}_out_ref={reference}.wav'
     # basic_key = 'https://bucket-mp3-file-for-mmixx.s3.ap-northeast-2.amazonaws.com/music'
+    print("s3_filepath : ", s3_filepath);
     s3.put_object(Bucket=bucket_name,
-              Key=f"music/{s3_filepath}",
+              Key=s3_filepath,
               Body=buffer.getvalue())
 
     torchaudio.save(out_filepath, y_hat.cpu().view(1, -1), 24000)

@@ -4,8 +4,12 @@ import com.a403.mmixx.music.model.entity.Music;
 import com.querydsl.core.annotations.QueryProjection;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
+@NoArgsConstructor
 public class MusicListResponseDto {
 	private Integer musicSeq;
 	private String musicName;
@@ -14,8 +18,10 @@ public class MusicListResponseDto {
 	private Integer musicLength;
 	private String musicianName;
 	private String albumName;
+	private String genre;
 	private Integer mixed;
-	private Integer edited;
+	private Integer inst;
+	private Integer presetSeq;
 
 	@QueryProjection
 	public MusicListResponseDto(Music entity) {
@@ -26,7 +32,17 @@ public class MusicListResponseDto {
 		this.musicLength = entity.getMusicLength();
 		this.musicianName = entity.getMusicianName();
 		this.albumName = entity.getAlbumName();
-		this.mixed = entity.getMixed();
-		this.edited = entity.getEdited();
+		this.genre = entity.getGenre();
+		if(entity.getMixed() != null) {
+			this.mixed = entity.getMixed().getMusicSeq();
+		} else {
+			this.mixed = null;
+		}
+		if(entity.getInst() != null) {
+			this.inst = entity.getInst().getMusicSeq();
+		} else {
+			this.inst = null;
+		}
+		this.presetSeq = entity.getPresetSeq();
 	}
 }
