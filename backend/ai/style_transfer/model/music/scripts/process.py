@@ -30,8 +30,8 @@ from deepafx_st.system import System
 import boto3
 import io
 s3 = boto3.client('s3',
-                aws_access_key_id='AKIAY2NHL6NEZPWL57H5',
-                aws_secret_access_key='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')
+                aws_access_key_id='AKIAY2NHL6NEZDLXTAF3',
+                aws_secret_access_key='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')
 bucket_name = 'bucket-mp3-file-for-mmixx'
 
 if __name__ == "__main__":

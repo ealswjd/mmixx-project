@@ -17,8 +17,8 @@ import boto3
 
 # s3 access 정보 가져오기 -> 가능하면 암호화(?)하면 좋을듯...
 s3 = boto3.client('s3',
-                aws_access_key_id='AKIAY2NHL6NEZPWL57H5',
-                aws_secret_access_key='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')
+                aws_access_key_id='AKIAY2NHL6NEZDLXTAF3',
+                aws_secret_access_key='Wht8JFGYjTiKyn9YjjRQEOcoQVVOolUVpAVhfyJ0')
 bucket_name = 'bucket-mp3-file-for-mmixx'
 # Create your views here.
 class MusicAPIView(APIView):
